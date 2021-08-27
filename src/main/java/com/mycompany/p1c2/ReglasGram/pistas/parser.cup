@@ -1,0 +1,316 @@
+/*Codigo de usuario*/
+package com.mycompany.p1c2.ReglasGram.pistas;
+import com.mycompany.p1c2.ReglasGram.Token;
+import java_cup.runtime.*;
+import com.mycompany.p1c2.ReglasGram.pistas.sym.*;
+import com.mycompany.p1c2.ReglasGram.auxiliares.*;
+import com.mycompany.p1c2.objetos.*;
+import java.util.ArrayList;
+import java.util.List;
+
+parser code {:
+		private List<ReportError> listaErrores;
+		private FunParser funParser = new FunParser();
+
+	public Parser(Lexer lex){
+		super(lex);
+		listaErrores = new ArrayList<ReportError>();
+	}
+	 @Override
+	public void syntax_error(Symbol cur_token){
+			Token token = (Token) cur_token.value;
+			/*			            
+            String tokenEsperados = "Tokens esperados: ";
+            tokenEsperados += listTokensEsperados();
+			String msgError =  "Error: ( "+ token.getLexema() +" ) -> {Linea: "+cur_token.left+", Columna: "+ cur_token.right +" } " + tokenEsperados;
+			listaErrores.add(msgError);
+			*/
+
+			String nombreSimbolo = symbl_name_from_id(cur_token.sym);
+			if(nombreSimbolo.equals("INVALID")){
+				addError("Lexico",token,"No se esperaba: " + token.getLexema(),null);
+			}else{
+				if(token != null){
+					addError("Sintactico",token,"No se esperaba: " + token.getLexema(),null);
+				}else{
+					token = new Token(nombreSimbolo,cur_token.left,cur_token.right);
+					addError("Sintactico",token,"No se esperaba: " + nombreSimbolo,null);
+				}
+				
+			}		
+
+	}
+	@Override
+	public void report_fatal_error(String message, Object info){
+			String Elerror = "Ocurrio un error no recuperable al analizar: " + message + " -> {objeto: " + info + "}";
+			if(info instanceof Symbol ){
+				Symbol sim = (Symbol) info;
+				Token token = (Token) sim.value;
+				addError("Sintactico",token,message,null);
+			}else{
+				System.out.println("Error -- :  " + message);
+			}
+	}
+	 @Override
+	public void report_error(String message, Object info){
+			System.out.println("Error desde el report_error: " + message);
+	}
+	 @Override
+	public void unrecovered_syntax_error(Symbol cur_token){
+		report_fatal_error("No se puede reparar y analizar el Error sintactico", cur_token);
+	}
+
+	private void addError(String tipoError, Token token,String descError, String solucion){
+		try{
+			ReportError reporte = new ReportError();
+			reporte.setTipoError(tipoError);
+			reporte.setColumna(token.getColumna());
+			reporte.setLinea(token.getLinea());
+			if (solucion == null) {
+                reporte.setSolucion(listTokensEsperados());
+            }else{
+                reporte.setSolucion(solucion);
+            }
+			reporte.setDescripcion(descError);
+			listaErrores.add(reporte);
+		}catch(Exception q){
+
+		}
+
+	}
+
+	private String listTokensEsperados(){
+		String tokenEsperados = "";
+		for (Integer expected_token_id : expected_token_ids()) {
+            	if(!symbl_name_from_id(expected_token_id).equals("error")){
+            		String nameToken = funParser.nameTokenEsperado(symbl_name_from_id(expected_token_id));
+            		if (nameToken == null){
+            			tokenEsperados += symbl_name_from_id(expected_token_id).toLowerCase() + "\n";
+            		}else{
+            			tokenEsperados += nameToken + "\n";
+            		}            		
+            	}                
+            }
+        return tokenEsperados;
+	}
+
+	@Override
+	protected int error_sync_size(){
+		return 1;
+	}
+	public List getListaErrores(){
+		return listaErrores;
+	}
+:}
+
+/*terminales*/
+terminal Token PISTA,EXTIENDE,KEEP,VAR,ARREGLO,SI,SINO,SWITCH,CASO;
+terminal Token SALIR,DEFAULT,PARA,MIENTRAS,HACER,CONTINUAR,RETORNA,REPRODUCIR,ESPERAR,ORDENAR,SUMARIZAR,LONGITUD;
+terminal Token MENSAJE,PRINCIPAL,BOOLEAN,ID_ENTERO,ID_BOOLEAN,ID_DOBLE,ID_CARACTER,ID_CADENA,DECIMAL,ENTERO,STRING,STRING_SIMPLE;
+terminal Token CHAR,ID_VARIABLE,PAI,PAD,CORI,CORD,COMA,IGUAL,SEMI,SALTO,TAB,IGUALACION,MEN_QUE,MENQ,MAYQ;
+terminal Token MAY_QUE,DIFERENTE,NULO,MAS_IGUAL,INCREMENTO,DECREMENTO;
+terminal Token AND,NAND,OR,NOR,XOR,NOT,MULT,SUMA,MENOS,DIV,MODULO,POTENCIA,LLAI,LLAD,INVALID;
+
+/*no terminales*/
+non terminal Token inicio,creacion_clase,creacion_clase_sig,otras_clases,fin_instruccion_todo,cont_inicio,funciones_inicio;
+non terminal Token funciones,declaracion_asignacion,estruc_si,funciones_especiales,estruc_para,estruc_mientras,procedimiento;
+non terminal Token declaracion,tipo,tipo_variable,arreglo;
+non terminal Token sig_procedimiento,parametros,sig_parametros,mas_parametros,varios_parametros,un_parametro,declaracion_mini;
+non terminal Token nombre_variable,otras_variables,asignacion,otra_variable,nombre_otra_variable,id_variable,es_array,sig_es_array;
+non terminal Token tipo_datos,expr,asig_array,cont_asig_array,sig_asig_array,expr_array,mas_position_array,sig_position_array;
+non terminal Token sig_cont_asig_array,fin_llave;
+non terminal Token si,condicion,cont_estruc_si,cont_estruc_si_funcion,estruc_sino_si;
+
+/*precedencia*/
+precedence left SUMA,MENOS,OR,NOR,XOR;
+precedence left MULT,DIV,MODULO,AND,NAND;
+precedence left IGUALACION,MEN_QUE,MAY_QUE,DIFERENTE,MAYQ,MENQ;
+precedence left POTENCIA;
+precedence right NOT;
+
+/*gramatica*/
+
+inicio ::= PISTA creacion_clase cont_inicio
+			|error
+			;
+
+creacion_clase ::= 	ID_VARIABLE creacion_clase_sig
+					|error;
+creacion_clase_sig ::= 	EXTIENDE otras_clases fin_instruccion_todo
+						|fin_instruccion_todo
+						|error
+						;
+otras_clases ::= otras_clases COMA ID_VARIABLE
+				|ID_VARIABLE
+				|error
+				;
+
+fin_instruccion_todo ::= SALTO TAB
+						;
+
+cont_inicio ::= cont_inicio funciones_inicio
+				|funciones_inicio
+				;
+funciones_inicio ::= declaracion_asignacion
+					|procedimiento
+					; 
+
+funciones ::= 	declaracion_asignacion 
+				|estruc_si
+				|funciones_especiales
+				|estruc_para
+				|estruc_mientras
+				;
+
+declaracion_asignacion ::= declaracion asignacion fin_instruccion_todo
+							;
+
+declaracion ::= KEEP tipo
+				|tipo
+				|nombre_variable
+				;
+
+tipo ::= VAR tipo_variable arreglo nombre_variable
+		|error
+		;
+
+tipo_variable ::= 	ID_ENTERO
+					|ID_BOOLEAN
+					|ID_DOBLE
+					|ID_CARACTER
+					|ID_CADENA
+					;
+arreglo ::= ARREGLO
+			|
+			;
+
+nombre_variable ::= ID_VARIABLE otras_variables es_array
+					;
+otras_variables ::= otra_variable
+					|
+					;
+otra_variable ::= otra_variable nombre_otra_variable
+				|nombre_otra_variable
+				;
+
+nombre_otra_variable ::= COMA id_variable 
+					 ;
+id_variable ::= ID_VARIABLE
+				|error
+				;
+
+es_array ::= 	CORI sig_es_array
+				|
+				;
+sig_es_array ::= 	expr CORD es_array
+					|error
+					;
+asignacion ::= IGUAL tipo_datos
+				|
+				;
+tipo_datos ::= 	expr
+				|asig_array
+				;
+
+expr ::= expr SUMA expr
+		|expr MENOS expr
+		|expr DIV expr
+		|expr MULT expr
+		|expr IGUALACION expr
+		|expr DIFERENTE expr
+		|expr MEN_QUE expr
+		|expr MAY_QUE expr
+		|expr MENQ expr
+		|expr MAYQ expr
+		|expr OR expr
+		|expr NAND expr
+		|expr AND expr
+		|NOT expr
+		|NULO expr
+		|expr POTENCIA expr
+		|expr XOR expr
+		|expr NOR expr
+		|expr MODULO expr
+		|PAI expr PAD 
+		|MENOS ENTERO
+	    |MENOS DECIMAL
+	    |ENTERO
+	    |DECIMAL
+	    |CHAR
+	    |STRING
+	    |BOOLEAN
+	    |ID_VARIABLE
+	    |STRING_SIMPLE
+	    |funciones_especiales
+	    |error
+	    ;
+
+asig_array ::= 	LLAI sig_asig_array
+				;
+sig_asig_array ::= cont_asig_array fin_llave
+					|LLAD
+					;
+fin_llave ::= 	LLAD
+				|error
+				;
+
+cont_asig_array ::= asig_array sig_cont_asig_array
+					|expr_array
+					;
+sig_cont_asig_array ::= COMA asig_array 
+					|
+					;
+expr_array ::= expr mas_position_array
+				;
+mas_position_array ::= COMA sig_position_array
+						|
+						;
+sig_position_array ::= expr mas_position_array
+						;
+
+procedimiento ::= 	KEEP sig_procedimiento
+					|sig_procedimiento
+					;
+
+sig_procedimiento ::= 	tipo_variable ID_VARIABLE parametros
+						|ID_VARIABLE parametros
+						|error
+						;
+parametros ::= PAI sig_parametros fin_instruccion_todo
+				;
+sig_parametros ::= 	PAD
+					|declaracion_mini mas_parametros PAD
+					|error
+					;
+
+mas_parametros ::= varios_parametros
+					|
+					;
+
+varios_parametros ::= varios_parametros un_parametro
+					|un_parametro
+					;
+
+un_parametro ::= 	COMA declaracion_mini
+					|error
+					; 
+
+declaracion_mini ::= tipo_variable arreglo ID_VARIABLE
+					;
+
+estruc_si ::= si estruc_sino_si
+			  ;
+
+si ::= SI condicion cont_estruc_si
+		;
+
+condicion ::= 	PAI expr PAD SALTO
+				|error
+				;
+
+cont_estruc_si ::= 	cont_estruc_si cont_estruc_si_funcion
+					|cont_estruc_si_funcion
+					;
+cont_estruc_si_funcion ::=  TAB funciones
+							;
+
