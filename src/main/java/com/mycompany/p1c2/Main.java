@@ -37,7 +37,6 @@ public class Main {
         VisualPrincipal visual = new VisualPrincipal();
         visual.setLocationRelativeTo(null);
         visual.setSize(900, 700);
-        visual.setVisible(true);    
-       
+        visual.setVisible(true);     
     }     
 }
