@@ -18,20 +18,18 @@ parser code {:
 	}
 	 @Override
 	public void syntax_error(Symbol cur_token){
-			Token token = (Token) cur_token.value;
-			/*			            
-            String tokenEsperados = "Tokens esperados: ";
-            tokenEsperados += listTokensEsperados();
-			String msgError =  "Error: ( "+ token.getLexema() +" ) -> {Linea: "+cur_token.left+", Columna: "+ cur_token.right +" } " + tokenEsperados;
-			listaErrores.add(msgError);
-			*/
-
+			Token token = (Token) cur_token.value;			
 			String nombreSimbolo = symbl_name_from_id(cur_token.sym);
 			if(nombreSimbolo.equals("INVALID")){
 				addError("Lexico",token,"No se esperaba: " + token.getLexema(),null);
 			}else{
 				if(token != null){
-					addError("Sintactico",token,"No se esperaba: " + token.getLexema(),null);
+					String nameToken = funParser.nameTokenNoEsperado(nombreSimbolo);
+					if(nameToken == null){
+						addError("Sintactico",token,"No se esperaba: " + token.getLexema(),null);
+					}else{
+						addError("Sintactico",token,"No se esperaba: " + nameToken,null);
+					}					
 				}else{
 					token = new Token(nombreSimbolo,cur_token.left,cur_token.right);
 					addError("Sintactico",token,"No se esperaba: " + nombreSimbolo,null);
@@ -46,6 +44,9 @@ parser code {:
 			if(info instanceof Symbol ){
 				Symbol sim = (Symbol) info;
 				Token token = (Token) sim.value;
+				if(token == null){
+					token = new Token("report_fatal_error",sim.left,sim.right);
+				}
 				addError("Sintactico",token,message,null);
 			}else{
 				System.out.println("Error -- :  " + message);
@@ -113,8 +114,10 @@ terminal Token AND,NAND,OR,NOR,XOR,NOT,MULT,SUMA,MENOS,DIV,MODULO,POTENCIA,LLAI,
 
 /*no terminales*/
 non terminal Token inicio,creacion_clase,creacion_clase_sig,otras_clases,fin_instruccion_todo,cont_inicio,funciones_inicio;
+non terminal Token fin_instruccion,fin_instruccion_talvez,sig_tipo;
 non terminal Token funciones,declaracion_asignacion,estruc_si,funciones_especiales,estruc_para,estruc_mientras,procedimiento;
-non terminal Token declaracion,tipo,tipo_variable,arreglo;
+non terminal Token funciones_inicio_tab,declaracion,tipo,tipo_variable,arreglo;
+non terminal Token cont_procedimiento,cont_procedimiento_funciones,cont_procedimiento_funcion;
 non terminal Token sig_procedimiento,parametros,sig_parametros,mas_parametros,varios_parametros,un_parametro,declaracion_mini;
 non terminal Token nombre_variable,otras_variables,asignacion,otra_variable,nombre_otra_variable,id_variable,es_array,sig_es_array;
 non terminal Token tipo_datos,expr,asig_array,cont_asig_array,sig_asig_array,expr_array,mas_position_array,sig_position_array;
@@ -131,11 +134,15 @@ precedence right NOT;
 /*gramatica*/
 
 inicio ::= PISTA creacion_clase cont_inicio
+				{:
+					System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+				:}
 			|error
 			;
 
 creacion_clase ::= 	ID_VARIABLE creacion_clase_sig
-					|error;
+					|error
+					;
 creacion_clase_sig ::= 	EXTIENDE otras_clases fin_instruccion_todo
 						|fin_instruccion_todo
 						|error
@@ -147,22 +154,30 @@ otras_clases ::= otras_clases COMA ID_VARIABLE
 
 fin_instruccion_todo ::= SALTO TAB
 						;
+fin_instruccion ::= SALTO
+					;
+fin_instruccion_talvez ::= SALTO 
+							|
+							;
 
-cont_inicio ::= cont_inicio funciones_inicio
-				|funciones_inicio
+cont_inicio ::= cont_inicio funciones_inicio_tab
+				|funciones_inicio_tab
 				;
-funciones_inicio ::= declaracion_asignacion
-					|procedimiento
+funciones_inicio_tab ::= funciones_inicio
+						;
+
+funciones_inicio ::= declaracion_asignacion fin_instruccion_todo
+					|procedimiento 
 					; 
 
-funciones ::= 	declaracion_asignacion 
+funciones ::= 	declaracion_asignacion
 				|estruc_si
 				|funciones_especiales
 				|estruc_para
 				|estruc_mientras
 				;
 
-declaracion_asignacion ::= declaracion asignacion fin_instruccion_todo
+declaracion_asignacion ::= declaracion asignacion
 							;
 
 declaracion ::= KEEP tipo
@@ -170,9 +185,12 @@ declaracion ::= KEEP tipo
 				|nombre_variable
 				;
 
-tipo ::= VAR tipo_variable arreglo nombre_variable
-		|error
+tipo ::= VAR sig_tipo
 		;
+
+sig_tipo ::= tipo_variable arreglo nombre_variable
+			|error
+			;
 
 tipo_variable ::= 	ID_ENTERO
 					|ID_BOOLEAN
@@ -276,12 +294,23 @@ sig_procedimiento ::= 	tipo_variable ID_VARIABLE parametros
 						|ID_VARIABLE parametros
 						|error
 						;
-parametros ::= PAI sig_parametros fin_instruccion_todo
+parametros ::= PAI sig_parametros cont_procedimiento
 				;
 sig_parametros ::= 	PAD
 					|declaracion_mini mas_parametros PAD
 					|error
 					;
+
+cont_procedimiento ::=  cont_procedimiento_funciones
+						|
+						;
+
+cont_procedimiento_funciones ::= cont_procedimiento_funciones cont_procedimiento_funcion
+								|cont_procedimiento_funcion
+								;
+cont_procedimiento_funcion ::=  fin_instruccion_todo cont_estruc_si_funcion
+								//error
+								;
 
 mas_parametros ::= varios_parametros
 					|
@@ -301,10 +330,10 @@ declaracion_mini ::= tipo_variable arreglo ID_VARIABLE
 estruc_si ::= si estruc_sino_si
 			  ;
 
-si ::= SI condicion cont_estruc_si
+si ::= SI condicion cont_estruc_si fin_instruccion
 		;
 
-condicion ::= 	PAI expr PAD SALTO
+condicion ::= 	PAI expr PAD fin_instruccion
 				|error
 				;
 

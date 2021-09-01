@@ -1,5 +1,5 @@
-com\mycompany\p1c2\ReglasGram\Token.class
-com\mycompany\p1c2\sockets\Servidor.class
 com\mycompany\p1c2\sockets\Conexion.class
 com\mycompany\p1c2\Main.class
 com\mycompany\p1c2\sockets\Cliente.class
+com\mycompany\p1c2\ReglasGram\Token.class
+com\mycompany\p1c2\sockets\Servidor.class

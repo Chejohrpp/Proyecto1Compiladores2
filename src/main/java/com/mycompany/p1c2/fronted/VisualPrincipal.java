@@ -7,19 +7,25 @@ package com.mycompany.p1c2.fronted;
 
 import com.mycompany.p1c2.fronted.funciones.*;
 import java.awt.BorderLayout;
+import javax.sound.sampled.Clip;
 
 /**
  *
  * @author sergi
  */
 public class VisualPrincipal extends javax.swing.JFrame {
-
+    
+    private Clip clip;
+    private CrearPista crearPista;
+    private Reproductor reproductor;
+    
     /**
      * Creates new form VisualPrincipal
      */
     public VisualPrincipal() {
         initComponents();
         verReproductor();
+        
     }
 
     /**
@@ -122,8 +128,11 @@ public class VisualPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jmenuEliminarPistaActionPerformed
 
     private void menuCrearPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCrearPistaActionPerformed
-        // TODO add your handling code here:
-        CrearPista crearPista = new CrearPista();
+        // TODO add your handling code here:    
+        validarSonido();
+        if (crearPista == null) {
+            crearPista = new CrearPista();
+        }        
         crearPista.setSize(this.getWidth()-9, this.getHeight()-52);
         crearPista.setLocation(0, 0);
         JPMain.removeAll();
@@ -135,18 +144,33 @@ public class VisualPrincipal extends javax.swing.JFrame {
 
     private void menuReproductorInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuReproductorInicioActionPerformed
         // TODO add your handling code here:
+        validarSonido();
         verReproductor();
     }//GEN-LAST:event_menuReproductorInicioActionPerformed
 
       private void verReproductor(){
-            Reproductor reproductor = new Reproductor();
+          if (reproductor == null) {
+              reproductor = new Reproductor();
+          }            
             reproductor.setSize(this.getWidth()-9, this.getHeight()-52);
             reproductor.setLocation(0, 0);
+            clip = reproductor.getClip();
             JPMain.removeAll();
             JPMain.add(reproductor,BorderLayout.CENTER);
             JPMain.revalidate();
             JPMain.repaint();
+            clip = reproductor.getClip();
       }
+      private void validarSonido(){
+          if (clip == null) {
+              return;
+          }
+          if (clip.isActive()) {
+              clip.stop();
+              clip.setMicrosecondPosition(0);
+          }
+      }
+      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPMain;
     private javax.swing.JMenu jMenu1;

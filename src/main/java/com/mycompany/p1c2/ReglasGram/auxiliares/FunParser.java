@@ -65,4 +65,11 @@ public class FunParser {
             default: return null;
 	}
     }
+    public String nameTokenNoEsperado(String nameToken){
+        switch (nameToken){
+            case "TAB" : return "Tabulacion";
+            case "SALTO" : return "salto de linea";
+            default: return null;            
+        }
+    }
 }
