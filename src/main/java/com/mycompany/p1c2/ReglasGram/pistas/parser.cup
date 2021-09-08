@@ -114,6 +114,7 @@ terminal Token AND,NAND,OR,NOR,XOR,NOT,MULT,SUMA,MENOS,DIV,MODULO,POTENCIA,LLAI,
 
 /*no terminales*/
 non terminal Token inicio,creacion_clase,creacion_clase_sig,otras_clases,fin_instruccion_todo,cont_inicio,funciones_inicio;
+non terminal Token funciones_tab;
 non terminal Token fin_instruccion,fin_instruccion_talvez,sig_tipo;
 non terminal Token funciones,declaracion_asignacion,estruc_si,funciones_especiales,estruc_para,estruc_mientras,procedimiento;
 non terminal Token funciones_inicio_tab,declaracion,tipo,tipo_variable,arreglo;
@@ -143,8 +144,8 @@ inicio ::= PISTA creacion_clase cont_inicio
 creacion_clase ::= 	ID_VARIABLE creacion_clase_sig
 					|error
 					;
-creacion_clase_sig ::= 	EXTIENDE otras_clases fin_instruccion_todo
-						|fin_instruccion_todo
+creacion_clase_sig ::= 	EXTIENDE otras_clases fin_instruccion
+						|fin_instruccion
 						|error
 						;
 otras_clases ::= otras_clases COMA ID_VARIABLE
@@ -163,18 +164,18 @@ fin_instruccion_talvez ::= SALTO
 cont_inicio ::= cont_inicio funciones_inicio_tab
 				|funciones_inicio_tab
 				;
-funciones_inicio_tab ::= funciones_inicio
+funciones_inicio_tab ::= TAB funciones_inicio
 						;
 
-funciones_inicio ::= declaracion_asignacion fin_instruccion_todo
-					|procedimiento 
+funciones_inicio ::= declaracion_asignacion fin_instruccion
+					|procedimiento
 					; 
+
+funciones_tab ::= TAB funciones
+					;
 
 funciones ::= 	declaracion_asignacion
 				|estruc_si
-				|funciones_especiales
-				|estruc_para
-				|estruc_mientras
 				;
 
 declaracion_asignacion ::= declaracion asignacion
@@ -294,7 +295,7 @@ sig_procedimiento ::= 	tipo_variable ID_VARIABLE parametros
 						|ID_VARIABLE parametros
 						|error
 						;
-parametros ::= PAI sig_parametros cont_procedimiento
+parametros ::= PAI sig_parametros cont_procedimiento_funciones
 				;
 sig_parametros ::= 	PAD
 					|declaracion_mini mas_parametros PAD
@@ -308,7 +309,7 @@ cont_procedimiento ::=  cont_procedimiento_funciones
 cont_procedimiento_funciones ::= cont_procedimiento_funciones cont_procedimiento_funcion
 								|cont_procedimiento_funcion
 								;
-cont_procedimiento_funcion ::=  fin_instruccion_todo cont_estruc_si_funcion
+cont_procedimiento_funcion ::=  fin_instruccion_todo funciones_tab
 								//error
 								;
 
@@ -330,16 +331,20 @@ declaracion_mini ::= tipo_variable arreglo ID_VARIABLE
 estruc_si ::= si estruc_sino_si
 			  ;
 
-si ::= SI condicion cont_estruc_si fin_instruccion
+si ::= SI condicion cont_estruc_si
 		;
 
-condicion ::= 	PAI expr PAD fin_instruccion
+condicion ::= 	PAI expr PAD fin_instruccion_todo
 				|error
 				;
 
 cont_estruc_si ::= 	cont_estruc_si cont_estruc_si_funcion
 					|cont_estruc_si_funcion
 					;
-cont_estruc_si_funcion ::=  TAB funciones
+
+cont_estruc_si_funcion ::=  TAB funciones_tab
 							;
 
+estruc_sino_si ::= SINO
+					;
+				

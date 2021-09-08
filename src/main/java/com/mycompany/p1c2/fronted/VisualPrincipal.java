@@ -15,7 +15,6 @@ import javax.sound.sampled.Clip;
  */
 public class VisualPrincipal extends javax.swing.JFrame {
     
-    private Clip clip;
     private CrearPista crearPista;
     private Reproductor reproductor;
     
@@ -41,11 +40,6 @@ public class VisualPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuCrearPista = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jmenuEliminarPista = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         menuReproductorInicio = new javax.swing.JMenuItem();
 
@@ -72,26 +66,6 @@ public class VisualPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu1.add(menuCrearPista);
-
-        jMenuItem2.setText("Modificar Pista");
-        jMenu1.add(jMenuItem2);
-
-        jmenuEliminarPista.setText("Eliminar Pista");
-        jmenuEliminarPista.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmenuEliminarPistaActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jmenuEliminarPista);
-
-        jMenuItem4.setText("Servir Pista");
-        jMenu1.add(jMenuItem4);
-
-        jMenuItem5.setText("Guardar Pista");
-        jMenu1.add(jMenuItem5);
-
-        jMenuItem6.setText("Recuperar Pista");
-        jMenu1.add(jMenuItem6);
 
         jMenuBar1.add(jMenu1);
 
@@ -123,13 +97,9 @@ public class VisualPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jmenuEliminarPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmenuEliminarPistaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jmenuEliminarPistaActionPerformed
-
     private void menuCrearPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCrearPistaActionPerformed
         // TODO add your handling code here:    
-        validarSonido();
+        reproductor.validarSonido();
         if (crearPista == null) {
             crearPista = new CrearPista();
         }        
@@ -144,7 +114,7 @@ public class VisualPrincipal extends javax.swing.JFrame {
 
     private void menuReproductorInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuReproductorInicioActionPerformed
         // TODO add your handling code here:
-        validarSonido();
+        reproductor.validarSonido();
         verReproductor();
     }//GEN-LAST:event_menuReproductorInicioActionPerformed
 
@@ -154,21 +124,10 @@ public class VisualPrincipal extends javax.swing.JFrame {
           }            
             reproductor.setSize(this.getWidth()-9, this.getHeight()-52);
             reproductor.setLocation(0, 0);
-            clip = reproductor.getClip();
             JPMain.removeAll();
             JPMain.add(reproductor,BorderLayout.CENTER);
             JPMain.revalidate();
             JPMain.repaint();
-            clip = reproductor.getClip();
-      }
-      private void validarSonido(){
-          if (clip == null) {
-              return;
-          }
-          if (clip.isActive()) {
-              clip.stop();
-              clip.setMicrosecondPosition(0);
-          }
       }
       
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -176,11 +135,6 @@ public class VisualPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jmenuEliminarPista;
     private javax.swing.JMenuItem menuCrearPista;
     private javax.swing.JMenuItem menuReproductorInicio;
     // End of variables declaration//GEN-END:variables

@@ -20,6 +20,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -61,7 +62,8 @@ public class Reproductor extends javax.swing.JPanel {
         try{
             sonido = almacenamiento.getDatosMusica();
             if (sonido != null) {
-                DescSonido desc = sonido.getListaSonido().get(3);
+                DescSonido desc = sonido.getListaSonido().get(0);
+                series.setKey(desc.getName());
                 ByteArrayInputStream bis = new ByteArrayInputStream(desc.getAudio());
                 AudioFormat audioFormat = new AudioFormat(44100, 16, 2, true, false);
                 audioInputStream=new AudioInputStream(bis, audioFormat, desc.getAudio().length);
@@ -138,8 +140,6 @@ public class Reproductor extends javax.swing.JPanel {
     private void initComponents() {
 
         jpanelGrafico = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        listaAllSongs = new javax.swing.JList<>();
         jPanel1 = new javax.swing.JPanel();
         btnPlay = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
@@ -153,6 +153,11 @@ public class Reproductor extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listaAllSongs = new javax.swing.JList<>();
+        btnDelete = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jpanelGrafico.setBackground(new java.awt.Color(204, 255, 204));
 
@@ -160,34 +165,21 @@ public class Reproductor extends javax.swing.JPanel {
         jpanelGrafico.setLayout(jpanelGraficoLayout);
         jpanelGraficoLayout.setHorizontalGroup(
             jpanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 426, Short.MAX_VALUE)
         );
         jpanelGraficoLayout.setVerticalGroup(
             jpanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 307, Short.MAX_VALUE)
         );
 
-        listaAllSongs.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "kiss_of_death", "one_last_kiss" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listaAllSongs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        listaAllSongs.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listaAllSongsMouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(listaAllSongs);
-
-        btnPlay.setText("Play");
+        btnPlay.setText("Reproducir");
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
             }
         });
 
-        btnReset.setText("Reset");
+        btnReset.setText("Reiniciar");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetActionPerformed(evt);
@@ -218,7 +210,7 @@ public class Reproductor extends javax.swing.JPanel {
                 .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(sliderVolumen, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -270,6 +262,53 @@ public class Reproductor extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Contenido de la lista");
 
+        listaAllSongs.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "kiss_of_death", "one_last_kiss" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        listaAllSongs.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listaAllSongs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaAllSongsMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(listaAllSongs);
+
+        btnDelete.setText("Eliminar");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Modificar");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addComponent(btnDelete)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -278,21 +317,20 @@ public class Reproductor extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(40, 40, 40)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 47, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pbTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -307,16 +345,16 @@ public class Reproductor extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jpanelGrafico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -381,19 +419,59 @@ public class Reproductor extends javax.swing.JPanel {
             showContLista(listaReproduccion.getSelectedValue());        
         }
     }//GEN-LAST:event_listaReproduccionMouseClicked
+
+    private void deletePistaListas(String name){
+        for (ListaReproduccion lista : sonido.getListaReproducciones()) {
+            for (int i = 0; i < lista.getContenido().size(); i++) {
+               String auxName = lista.getContenido().get(i).getName();
+                if (auxName.equals(name)) {
+                    lista.getContenido().remove(i);
+                }
+            }
+        }
+    }
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        if(listaAllSongs.isSelectionEmpty()){
+            JOptionPane.showMessageDialog(this, "No se ha seleccionado nada", "Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+            int opcion = JOptionPane.showConfirmDialog(this, "Seguro que desea eliminar " + listaAllSongs.getSelectedValue() );
+            if (opcion == JOptionPane.OK_OPTION) {                
+                for (int i = 0; i < listaSonido.size(); i++) {
+                    DescSonido desc = listaSonido.get(i);
+                    if (listaAllSongs.getSelectedValue().equals(desc.getName())) {
+                        if (clip.isActive()) {
+                            clip.close();
+                            btnPlay.setText("Reproducir");
+                            series.setKey("");
+                            reset();
+                        }
+                        listaSonido.remove(i);
+                        deletePistaListas(desc.getName());
+                        JOptionPane.showMessageDialog(this, "Removido", "Borrado", JOptionPane.OK_OPTION);
+                        sonido.setListaSonido(listaSonido);
+                        almacenamiento.setDatosMusica(sonido);
+                        actualizarLista();
+                        break;                   
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
     private void playSound(){
         try{
+            if (!clip.isOpen()) {
+                JOptionPane.showMessageDialog(this, "No se ha seleccionado nada", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (clip.isActive()) {
                 clip.stop();
                 t.stop();
+                btnPlay.setText("Reproducir");
             }else{                
                 clip.start();
                 t.start();
-            }
-            if (!clip.isOpen()) {
-                clip.open();
-                clip.start();
-                t.start();
+                btnPlay.setText("Pausar");
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -414,7 +492,7 @@ public class Reproductor extends javax.swing.JPanel {
                 if (pbTiempo.getValue()==pbTiempo.getMaximum() || !clip.isActive()) {
                     if (clip.isOpen()) {
                         clip.setMicrosecondPosition(0);
-                        
+                        playStop();
                     }
                     t.stop();
                     reset();
@@ -449,15 +527,34 @@ public class Reproductor extends javax.swing.JPanel {
     public Clip getClip(){
         return clip;
     }
+    public void validarSonido(){
+        if (clip == null) {
+              return;
+          }
+          if (clip.isActive()) {
+              clip.stop();
+              clip.setMicrosecondPosition(0);
+          }
+    }
+    private void playStop(){
+        if (clip.isRunning()) {
+            btnPlay.setText("Pausar");
+        }else{
+            btnPlay.setText("Reproducir");
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnPlay;
     private javax.swing.JButton btnReset;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
