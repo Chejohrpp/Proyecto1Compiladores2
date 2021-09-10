@@ -123,7 +123,8 @@ non terminal Token sig_procedimiento,parametros,sig_parametros,mas_parametros,va
 non terminal Token nombre_variable,otras_variables,asignacion,otra_variable,nombre_otra_variable,id_variable,es_array,sig_es_array;
 non terminal Token tipo_datos,expr,asig_array,cont_asig_array,sig_asig_array,expr_array,mas_position_array,sig_position_array;
 non terminal Token sig_cont_asig_array,fin_llave;
-non terminal Token si,condicion,cont_estruc_si,cont_estruc_si_funcion,estruc_sino_si;
+non terminal Token si,condicion,cont_estruc_si,cont_estruc_si_funcion,estruc_sino_si,pre_cont_estruc_si,const_estruc_si_funcion;
+non terminal Token puede_si;
 non terminal Token sino_si,un_sino_si,inicio_sino_si,estruc_sino,sino,inicio_sino;
 non terminal Token switch,cont_switch;
 
@@ -334,17 +335,29 @@ declaracion_mini ::= tipo_variable arreglo ID_VARIABLE
 estruc_si ::= si estruc_sino_si
 			  ;
 
-si ::= SI condicion cont_estruc_si
+si ::= SI condicion pre_cont_estruc_si
 		;
 
-condicion ::= 	PAI expr PAD fin_instruccion_todo
+condicion ::= 	PAI expr PAD 
 				|error
 				;
+
+pre_cont_estruc_si ::= cont_estruc_si
+						|
+						;
 
 cont_estruc_si ::= 	cont_estruc_si cont_estruc_si_funcion
 					|cont_estruc_si_funcion
 					;
 
-cont_estruc_si_funcion ::=  TAB funciones_tab
+cont_estruc_si_funcion ::=  fin_instruccion_todo TAB const_estruc_si_funcion
 							;
 
+const_estruc_si_funcion ::= funciones_tab
+							|SINO puede_si
+							;
+puede_si ::= estruc_si
+			;
+
+estruc_sino_si ::= 	TAB
+					;
