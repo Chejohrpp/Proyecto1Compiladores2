@@ -47,4 +47,26 @@
             <version>4.11</version>
         </dependency>
     </dependencies>
+    <build>        
+        <plugins>
+        <plugin>
+        <!-- Build an executable JAR -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>com.mycompany.p1c2.Main</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        </configuration>
+      </plugin>
+        </plugins>
+    </build>
 </project>

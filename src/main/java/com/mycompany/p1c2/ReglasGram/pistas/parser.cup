@@ -86,9 +86,9 @@ parser code {:
             	if(!symbl_name_from_id(expected_token_id).equals("error")){
             		String nameToken = funParser.nameTokenEsperado(symbl_name_from_id(expected_token_id));
             		if (nameToken == null){
-            			tokenEsperados += symbl_name_from_id(expected_token_id).toLowerCase() + "\n";
+            			tokenEsperados += symbl_name_from_id(expected_token_id).toLowerCase() + " \n ";
             		}else{
-            			tokenEsperados += nameToken + "\n";
+            			tokenEsperados += nameToken + " \n ";
             		}            		
             	}                
             }
@@ -115,7 +115,7 @@ terminal Token AND,NAND,OR,NOR,XOR,NOT,MULT,SUMA,MENOS,DIV,MODULO,POTENCIA,LLAI,
 /*no terminales*/
 non terminal Token inicio,creacion_clase,creacion_clase_sig,otras_clases,fin_instruccion_todo,cont_inicio,funciones_inicio;
 non terminal Token funciones_tab;
-non terminal Token fin_instruccion,fin_instruccion_talvez,sig_tipo;
+non terminal Token fin_instruccion,fin_instruccion_talvez,sig_tipo,estruc_switch;
 non terminal Token funciones,declaracion_asignacion,estruc_si,funciones_especiales,estruc_para,estruc_mientras,procedimiento;
 non terminal Token funciones_inicio_tab,declaracion,tipo,tipo_variable,arreglo;
 non terminal Token cont_procedimiento,cont_procedimiento_funciones,cont_procedimiento_funcion;
@@ -124,6 +124,8 @@ non terminal Token nombre_variable,otras_variables,asignacion,otra_variable,nomb
 non terminal Token tipo_datos,expr,asig_array,cont_asig_array,sig_asig_array,expr_array,mas_position_array,sig_position_array;
 non terminal Token sig_cont_asig_array,fin_llave;
 non terminal Token si,condicion,cont_estruc_si,cont_estruc_si_funcion,estruc_sino_si;
+non terminal Token sino_si,un_sino_si,inicio_sino_si,estruc_sino,sino,inicio_sino;
+non terminal Token switch,cont_switch;
 
 /*precedencia*/
 precedence left SUMA,MENOS,OR,NOR,XOR;
@@ -136,7 +138,7 @@ precedence right NOT;
 
 inicio ::= PISTA creacion_clase cont_inicio
 				{:
-					System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+					
 				:}
 			|error
 			;
@@ -176,6 +178,7 @@ funciones_tab ::= TAB funciones
 
 funciones ::= 	declaracion_asignacion
 				|estruc_si
+				|estruc_switch
 				;
 
 declaracion_asignacion ::= declaracion asignacion
@@ -295,7 +298,7 @@ sig_procedimiento ::= 	tipo_variable ID_VARIABLE parametros
 						|ID_VARIABLE parametros
 						|error
 						;
-parametros ::= PAI sig_parametros cont_procedimiento_funciones
+parametros ::= PAI sig_parametros cont_procedimiento
 				;
 sig_parametros ::= 	PAD
 					|declaracion_mini mas_parametros PAD
@@ -345,6 +348,3 @@ cont_estruc_si ::= 	cont_estruc_si cont_estruc_si_funcion
 cont_estruc_si_funcion ::=  TAB funciones_tab
 							;
 
-estruc_sino_si ::= SINO
-					;
-				

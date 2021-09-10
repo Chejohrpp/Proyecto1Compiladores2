@@ -65,7 +65,7 @@ principal = [pP]"rincipal"
 %}
 
 %eofval{
-  return new java_cup.runtime.Symbol(sym.EOF);
+	return new java_cup.runtime.Symbol(sym.EOF);
 %eofval}
 
 %%
@@ -124,7 +124,7 @@ principal = [pP]"rincipal"
 	{id_variable}		{return new Symbol(ID_VARIABLE,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
 
 	/*simbolos*/
- 	"("									{return new Symbol(PAI,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
+	"("									{return new Symbol(PAI,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
 	")"									{return new Symbol(PAD,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
 	"["									{return new Symbol(CORI,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
 	"]"									{return new Symbol(CORD,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
@@ -170,4 +170,4 @@ principal = [pP]"rincipal"
 }
 
 /* error */
-    [^]                              	{return new Symbol(INVALID,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}
+		[^]                              	{return new Symbol(INVALID,yyline+1,yycolumn+1, new Token(yytext(),yyline+1,yycolumn+1));}

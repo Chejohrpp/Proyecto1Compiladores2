@@ -28,6 +28,7 @@ public class CrearPista extends javax.swing.JPanel {
      */
     public CrearPista() {
         initComponents();
+        lblError.setText("");
         visualizacion();
         tablaErrores = (DefaultTableModel) tableError.getModel();
         limpiarErrores();
@@ -49,6 +50,7 @@ public class CrearPista extends javax.swing.JPanel {
         txtLineaColumna = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableError = new javax.swing.JTable();
+        lblError = new javax.swing.JLabel();
 
         txtSource.setColumns(20);
         txtSource.setRows(5);
@@ -82,6 +84,8 @@ public class CrearPista extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(tableError);
 
+        lblError.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,17 +93,19 @@ public class CrearPista extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                        .addComponent(txtLineaColumna))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(btnCompilar)
-                        .addGap(0, 406, Short.MAX_VALUE))
+                        .addComponent(btnCompilar)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
-                            .addComponent(txtLineaColumna))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                        .addGap(313, 313, 313)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -108,7 +114,8 @@ public class CrearPista extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(btnCompilar))
+                    .addComponent(btnCompilar)
+                    .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -143,10 +150,11 @@ public class CrearPista extends javax.swing.JPanel {
                     String.valueOf(reportError.getColumna()),reportError.getTipoError(),reportError.getDescripcion(),reportError.getSolucion()};
                 tablaErrores.addRow(data);
             }
-            if (error.size()==0) {
-                System.out.println("COOL");
+            if (error.size() == 0) {
+                lblError.setText("Codigo bien");
+            }else{
+                lblError.setText("");
             }
-            
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -191,6 +199,7 @@ public class CrearPista extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblError;
     private javax.swing.JTable tableError;
     private javax.swing.JTextField txtLineaColumna;
     private javax.swing.JTextArea txtSource;
